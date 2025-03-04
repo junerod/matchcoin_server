@@ -15,7 +15,7 @@ const transacoesController = new TransacoesController(new TransacaoService(new T
 
 /**
  * @openapi
- * /transacoes/transacao:
+ * /transacoes/identificador:
  *   get:
  *     summary: Cria um identificador para agrupar transações
  *     description: Endpoint que gerar um UUID para inserir nas transações.
@@ -76,15 +76,21 @@ router.post("/transacoes/sacar", [logger, authenticateJWT, validateDTO(Transacao
  *           schema:
  *             type: object
  *             properties:
+ *               identificador:
+ *                 type: string
+ *                 example: "ecaf95e0-31d8-4529-9972-d1042d5f8a87"
  *               hash:
  *                 type: string
- *                 example: "abe01af13242A"
- *               cliente_id:
+ *                 example: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+ *               cpf:
  *                 type: string
- *                 example: "123"
- *               valor:
+ *                 example: "999.999.999-99"
+ *               quantidade:
  *                 type: string
  *                 example: "0.000000000000000001"
+ *               carteira:
+ *                 type: string
+ *                 example: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
  *     responses:
  *       200:
  *         description: Operação realizada com sucesso.
@@ -110,13 +116,19 @@ router.post("/transacoes/receber-taxa", [logger, validateDTO(ReceberTaxaDTO)], (
  *           schema:
  *             type: object
  *             properties:
+ *               identificador:
+ *                 type: string
+ *                 example: "ecaf95e0-31d8-4529-9972-d1042d5f8a87"
+ *               hash:
+ *                 type: string
+ *                 example: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
  *               cpf:
  *                 type: string
  *                 example: "999.999.999-99"
  *               quantidade:
  *                 type: string
- *                 example: "10"
- *               hash:
+ *                 example: "0.000000000000000001"
+ *               carteira:
  *                 type: string
  *                 example: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
  *     responses:

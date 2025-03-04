@@ -58,8 +58,8 @@ export class TransacoesController {
 
     deposito = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { identificador, hash, cpf, quantidade } = req.body;
-            const transacao = await this.transacaoService.salvar(identificador, hash, cpf, quantidade, "DEPOSITO");
+            const { identificador, hash, cpf, quantidade, carteira } = req.body;
+            const transacao = await this.transacaoService.salvar(identificador, hash, cpf, quantidade, "DEPOSITO", carteira, this.wallet, "");
             return res.status(201).json({transacao});    
         } catch (error) {
             return res.status(400).json({error});    
@@ -130,9 +130,9 @@ export class TransacoesController {
 
     receberTaxa = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { identificador, hash, cpf, quantidade } = req.body;
+            const { identificador, hash, cpf, quantidade, carteira, gas_bnb } = req.body;
             console.log("identificador", identificador);
-            const transacao = await this.transacaoService.salvar(identificador, hash, cpf, quantidade, "TAXA");
+            const transacao = await this.transacaoService.salvar(identificador, hash, cpf, quantidade, "TAXA", carteira, this.wallet, gas_bnb);
             return res.status(201).json({transacao});    
         } catch (error) {
             return res.status(400).json({error});    
@@ -185,7 +185,7 @@ export class TransacoesController {
             await tx.wait();
             const hash = tx.hash;
             console.log("📤 Transação enviada. Hash:", hash);
-            const transacao = await this.transacaoService.salvar(identificador, hash, cpf, quantidade, "SAQUE");
+            const transacao = await this.transacaoService.salvar(identificador, hash, cpf, quantidade, "SAQUE", this.wallet, carteira, "");
             return res.status(201).json({transacao});    
         } catch (error) {
             console.log("error", error);
