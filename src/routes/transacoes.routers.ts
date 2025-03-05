@@ -8,6 +8,7 @@ import { TransacaoDTO } from "../dtos/transacaoDTO";
 import { ReceberTaxaDTO } from "../dtos/receberTaxaDTO";
 import { DepositoDTO } from "../dtos/depositoDTO";
 import { CalcularGasDTO } from "../dtos/calcularGasDTO";
+import { TransacaoAvulsoDTO } from "../dtos/transacaoAvulsoDTO";
 import { TransacaoService } from "../services/transacaoService";
 import { TransacaoRepository } from "../repositories/transacaoRepository";
 const router = Router();
@@ -27,6 +28,19 @@ const transacoesController = new TransacoesController(new TransacaoService(new T
 */
 router.get("/transacoes/identificador", [logger], (req: Request, res: Response, next: NextFunction) => { transacoesController.identificador(req, res, next) });
 
+/**
+ * @openapi
+ * /transacoes/transacoes:
+ *   get:
+ *     summary: Listagem de transações
+ *     description: Endpoint que lista todas as transações.
+ *     responses:
+ *       200:
+ *         description: Operação realizada com sucesso.
+ *       400:
+ *         description: Erro na requisição.
+*/
+router.get("/transacoes/transacoes", [logger, authenticateJWT], (req: Request, res: Response, next: NextFunction) => { transacoesController.transacoes(req, res, next) });
 
 /**
  * @openapi
@@ -174,4 +188,52 @@ router.post("/transacoes/deposito", [logger, validateDTO(DepositoDTO)], (req: Re
  */
 router.post("/transacoes/calcular-gas", [logger, validateDTO(CalcularGasDTO)], (req: Request, res: Response, next: NextFunction) => { transacoesController.calcularGas(req, res, next) });
 
+/**
+ * @openapi
+ * /transacoes/deposito:
+ *   post:
+ *     summary: Salva os dados de transferência de depósito.
+ *     description: Endpoint para salvar de depósito.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               identificador:
+ *                 type: string
+ *                 example: "ecaf95e0-31d8-4529-9972-d1042d5f8a87"
+ *               hash:
+ *                 type: string
+ *                 example: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+ *               cpf:
+ *                 type: string
+ *                 example: "999.999.999-99"
+ *               quantidade:
+ *                 type: string
+ *                 example: "0.000000000000000001"
+ *               tipo:
+ *                 type: string
+ *                 example: [SAQUE, DEPOSITO, TAXA]
+ *               carteira_de:
+ *                 type: string
+ *                 example: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+ *               carteira_para:
+ *                 type: string
+ *                 example: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+ *               gas_bnb:
+ *                 type: string
+ *                 example: "0.000000000000000001"
+ *     responses:
+ *       200:
+ *         description: Operação realizada com sucesso.
+ *       400:
+ *         description: Erro na requisição.
+ *       401:
+ *         description: Usuário não tem acesso a operação.
+ *       403:
+ *         description: Token inválido ou expirado.
+ */
+router.post("/transacoes/avulso", [logger, validateDTO(TransacaoAvulsoDTO)], (req: Request, res: Response, next: NextFunction) => { transacoesController.avulso(req, res, next) });
 export default router;

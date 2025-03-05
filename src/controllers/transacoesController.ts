@@ -192,4 +192,23 @@ export class TransacoesController {
             return res.status(400).json({error});    
         }
     }
+
+    avulso = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { identificador, hash, cpf, quantidade, tipo, carteira_de, carteira_para, gas_bnb} = req.body;
+            const transacao = await this.transacaoService.salvar(identificador, hash, cpf, quantidade, tipo, carteira_de, carteira_para, gas_bnb);
+            return res.status(201).json({transacao});    
+        } catch (error) {
+            return res.status(400).json({error});    
+        }
+    }
+
+    transacoes = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const transacoes = await this.transacaoService.listarTransacoes();
+            return res.status(201).json({transacoes});     
+        } catch (error) {
+            return res.status(400).json({error});    
+        }
+    }
 }

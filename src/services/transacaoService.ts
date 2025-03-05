@@ -9,10 +9,8 @@ export class TransacaoService {
         return transacao;
     }
 
-    getAllUsers() {
-    }
-
-    getUserById(id: number) {
+    async listarTransacoes() {
+        return await this.transacaoRepository.listarTransacoes();
     }
 }
   
