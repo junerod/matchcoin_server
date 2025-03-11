@@ -50,7 +50,7 @@ export class TransacoesController {
     identificador = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const identificador = uuidv4();
-            return res.status(201).json({identificador});    
+            return res.status(200).json({identificador});    
         } catch (error) {
             return res.status(400).json({error});    
         }
@@ -206,7 +206,11 @@ export class TransacoesController {
     transacoes = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const transacoes = await this.transacaoService.listarTransacoes();
-            return res.status(201).json({transacoes});     
+            if (transacoes != null) {
+                return res.status(200).json({transacoes});     
+            } else {
+                return res.status(404).json({})
+            }
         } catch (error) {
             return res.status(400).json({error});    
         }
